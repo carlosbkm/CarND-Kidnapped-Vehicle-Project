@@ -24,7 +24,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	//   x, y, theta and their uncertainties from GPS) and all weights to 1. 
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
-  num_particles 100;
+  num_particles = 100;
   
   std::default_random_engine gen;
   
@@ -86,6 +86,31 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	//   observed measurement to this particular landmark.
 	// NOTE: this method will NOT be called by the grading code. But you will probably find it useful to 
 	//   implement this method and use it as a helper during the updateWeights phase.
+  for (int i = 0; i < observations.size(); i++){
+    // get the current observation
+    LandmarkObs o = observations[i];
+    
+    // init minimum distance
+    double min_distance = numeric_limits<double>::max();
+    
+    //
+    int landmark_id = -1;
+    
+    for (int j = 0; j < predicted.size(); j++){
+      LandmarkObs p = predicted[j]
+      
+      // calculate distance between observed and predicted
+      double temp_distance = dist(o.x, o.y, p.x, p.y);
+      
+      // find predicted nearest to observed
+      if(temp_distance < min_distance){
+        min_distance = temp_distance;
+        landmark_id = p.id;
+      }
+    }
+    // set the observations landmark id to the nearest predicted that we got
+    observations[i].id = landmark_id;
+  }
 
 }
 
